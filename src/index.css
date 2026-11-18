@@ -337,3 +337,19 @@ a:hover { text-decoration: underline; }
 @media (max-width: 760px) {
   .profile-grid { grid-template-columns: 1fr; }
 }
+
+/* ---- Artistas y géneros ---- */
+.catalog-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; }
+.catalog-card {
+  display: flex; flex-direction: column; gap: 0.35rem; height: 100%;
+  background: white; border-radius: 8px; padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); color: #222; transition: box-shadow 0.15s;
+}
+.catalog-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.12); text-decoration: none; }
+.catalog-icon { font-size: 1.5rem; }
+.catalog-name { font-weight: 700; color: #4338ca; }
+.catalog-extra {
+  font-size: 0.85rem; color: #666;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.section-title { font-size: 1.05rem; color: #444; margin-bottom: 0.75rem; }
