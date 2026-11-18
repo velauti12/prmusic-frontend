@@ -83,6 +83,14 @@ function SongDetail({ id }) {
     <article className="song-detail">
       <Link to="/" className="back-link">← Volver al listado</Link>
 
+      {song.status && song.status !== 'approved' && (
+        <p className={`status-banner status-${song.status}`} role="status">
+          {song.status === 'pending'
+            ? '⏳ Esta canción está pendiente de aprobación. Solo vos la podés ver por ahora.'
+            : '✖ Esta canción fue rechazada por un administrador.'}
+        </p>
+      )}
+
       <header className="song-header">
         <div className="song-header-cover">
           {cover ? <img src={cover} alt={`Portada de ${song.album.title}`} /> : <span aria-hidden="true">🎵</span>}
