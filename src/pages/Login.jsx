@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { login as loginApi } from '../services/authService'
 import useAuthStore from '../store/authStore'
 import ErrorMessage from '../components/ErrorMessage'
@@ -12,6 +12,9 @@ export default function Login() {
 
   const { login } = useAuthStore()
   const navigate  = useNavigate()
+  const location  = useLocation()
+  // Si llegó desde una página protegida o desde "Agregar a favoritos", vuelve ahí
+  const from      = location.state?.from || '/'
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -32,7 +35,7 @@ export default function Login() {
       const { data } = await loginApi(form.username, form.password)
       // data = { token, user_id, username, role }
       login(data)
-      navigate('/')
+      navigate(from, { replace: true })
     } catch (err) {
       setError(getErrorMessage(err, 'Error al iniciar sesión.'))
     } finally {
