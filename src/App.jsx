@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import PrivateRoute from './components/PrivateRoute'
+import Toaster from './components/Toaster'
 
-// Pages (las vamos a crear de a una)
+// Pages
 import Home       from './pages/Home'
 import SongDetail from './pages/SongDetail'
 import Login      from './pages/Login'
@@ -13,12 +14,14 @@ import Artists    from './pages/Artists'
 import ArtistDetail from './pages/ArtistDetail'
 import Genres     from './pages/Genres'
 import GenreDetail from './pages/GenreDetail'
+import NotFound   from './pages/NotFound'
 
 export default function App() {
   return (
     <BrowserRouter>
+      <a href="#contenido" className="skip-link">Saltar al contenido</a>
       <Navbar />
-      <main className="main-content">
+      <main id="contenido" className="main-content" tabIndex={-1}>
         <Routes>
           {/* Rutas públicas */}
           <Route path="/"              element={<Home />} />
@@ -37,8 +40,11 @@ export default function App() {
           <Route path="/songs/new" element={
             <PrivateRoute><NewSong /></PrivateRoute>
           } />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      <Toaster />
     </BrowserRouter>
   )
 }

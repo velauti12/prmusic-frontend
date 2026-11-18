@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { register as registerApi, login as loginApi } from '../services/authService'
 import useAuthStore from '../store/authStore'
+import { getErrorList } from '../utils/apiError'
 
 export default function Register() {
   const [form, setForm]       = useState({ username: '', email: '', password: '', password_confirmation: '' })
@@ -36,8 +37,7 @@ export default function Register() {
       login(data)
       navigate('/')
     } catch (err) {
-      const apiErrors = err.response?.data?.errors || ['Error al registrarse.']
-      setErrors(Array.isArray(apiErrors) ? apiErrors : [apiErrors])
+      setErrors(getErrorList(err, 'Error al registrarse.'))
     } finally {
       setLoading(false)
     }
@@ -101,8 +101,8 @@ export default function Register() {
         </div>
 
         {errors.length > 0 && (
-          <ul className="error-list">
-            {errors.map((e, i) => <li key={i}>⚠️ {e}</li>)}
+          <ul className="error-list" role="alert">
+            {errors.map((msg) => <li key={msg}>⚠️ {msg}</li>)}
           </ul>
         )}
 

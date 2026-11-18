@@ -1,8 +1,9 @@
-// Spinner de carga centrado en pantalla
-export default function Spinner() {
+// Indicador de carga centrado
+export default function Spinner({ label = 'Cargando...' }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
-      <div className="spinner" />
+    <div className="spinner-wrapper" role="status">
+      <div className="spinner" aria-hidden="true" />
+      <span className="sr-only">{label}</span>
     </div>
   )
 }

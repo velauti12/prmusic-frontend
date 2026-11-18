@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { login as loginApi } from '../services/authService'
 import useAuthStore from '../store/authStore'
 import ErrorMessage from '../components/ErrorMessage'
+import { getErrorMessage } from '../utils/apiError'
 
 export default function Login() {
   const [form, setForm]       = useState({ username: '', password: '' })
@@ -33,8 +34,7 @@ export default function Login() {
       login(data)
       navigate('/')
     } catch (err) {
-      const msg = err.response?.data?.error || 'Error al iniciar sesión.'
-      setError(msg)
+      setError(getErrorMessage(err, 'Error al iniciar sesión.'))
     } finally {
       setLoading(false)
     }
