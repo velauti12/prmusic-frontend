@@ -25,5 +25,11 @@ export default function useFetch(fetcher, deps = []) {
 
   const reload = useCallback(() => setAttempt((n) => n + 1), [])
 
-  return { ...state, reload }
+  // Permite actualizar los datos localmente (por ejemplo, quitar un ítem borrado)
+  const setData = useCallback(
+    (updater) => setState((s) => ({ ...s, data: typeof updater === 'function' ? updater(s.data) : updater })),
+    []
+  )
+
+  return { ...state, reload, setData }
 }
