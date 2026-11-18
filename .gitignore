@@ -30,3 +30,6 @@ dist-ssr
 
 # Notas personales del TP (consignas, plan, exports de chat)
 notas/
+
+# Configuración local de Claude Code
+.claude/
