@@ -2,8 +2,11 @@
 // Las líneas que solo tienen acordes se resaltan para leerlas más fácil.
 const CHORD = /^[A-G][b#]?(?:m|min|maj|dim|aug)?(?:7|9|11|13)?(?:\/[A-G][b#]?)?$/
 
+// Caracteres invisibles que quedan al copiar letras de otras páginas
+const INVISIBLE = /\p{Cf}/gu
+
 function isChordLine(line) {
-  const tokens = line.trim().split(/\s+/).filter(Boolean)
+  const tokens = line.replace(INVISIBLE, '').trim().split(/\s+/).filter(Boolean)
   return tokens.length > 0 && tokens.every((t) => CHORD.test(t))
 }
 
