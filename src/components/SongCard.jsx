@@ -1,23 +1,26 @@
 import { Link } from 'react-router-dom'
 
-// Tarjeta de canción para los listados. Muestra la portada del álbum si tiene.
+// Fila del listado, como el índice de un cuaderno: título, artista y el tono a la derecha
 export default function SongCard({ song }) {
   const cover = song.album?.cover_url
   return (
-    <article className="song-card">
-      <div className="song-cover" aria-hidden="true">
-        {cover ? <img src={cover} alt="" loading="lazy" /> : <span>🎵</span>}
-      </div>
-      <div className="song-info">
-        <h3>
+    <article className="song-row">
+      {cover && <img className="song-row-cover" src={cover} alt="" loading="lazy" />}
+      <div className="song-row-text">
+        <h3 className="song-row-title">
           <Link to={`/songs/${song.id}`}>{song.title}</Link>
         </h3>
-        <p className="song-meta">
-          {song.artist?.name && <span>🎤 {song.artist.name}</span>}
-          {song.genre?.name && <span> · 🎸 {song.genre.name}</span>}
-          {song.original_key && <span> · Tono {song.original_key}</span>}
+        <p className="song-row-meta">
+          {song.artist?.name}
+          {song.genre?.name && <span className="song-row-genre">{song.genre.name}</span>}
         </p>
       </div>
+      <span className="song-row-leader" aria-hidden="true" />
+      {song.original_key && (
+        <span className="song-row-key" title="Tono original">
+          <span className="sr-only">Tono </span>{song.original_key}
+        </span>
+      )}
     </article>
   )
 }

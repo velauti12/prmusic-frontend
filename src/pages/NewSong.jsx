@@ -151,7 +151,7 @@ export default function NewSong() {
 
         {apiErrors.length > 0 && (
           <ul className="error-list" role="alert">
-            {apiErrors.map((msg) => <li key={msg}>⚠️ {msg}</li>)}
+            {apiErrors.map((msg) => <li key={msg}>{msg}</li>)}
           </ul>
         )}
 

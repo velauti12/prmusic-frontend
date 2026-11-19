@@ -102,7 +102,7 @@ export default function Register() {
 
         {errors.length > 0 && (
           <ul className="error-list" role="alert">
-            {errors.map((msg) => <li key={msg}>⚠️ {msg}</li>)}
+            {errors.map((msg) => <li key={msg}>{msg}</li>)}
           </ul>
         )}
 

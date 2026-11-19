@@ -65,7 +65,7 @@ function SongDetail({ id }) {
   if (error) {
     const notFound = error === 'Recurso no encontrado'
     return notFound ? (
-      <EmptyState icon="🎸" title="Esta canción no existe o todavía no fue aprobada.">
+      <EmptyState title="Esta canción no existe o todavía no fue aprobada.">
         <Link to="/" className="btn-secondary">Volver al listado</Link>
       </EmptyState>
     ) : (
@@ -81,57 +81,60 @@ function SongDetail({ id }) {
 
   return (
     <article className="song-detail">
-      <Link to="/" className="back-link">← Volver al listado</Link>
+      <Link to="/" className="back-link">Volver al listado</Link>
 
       {song.status && song.status !== 'approved' && (
         <p className={`status-banner status-${song.status}`} role="status">
           {song.status === 'pending'
-            ? '⏳ Esta canción está pendiente de aprobación. Solo vos la podés ver por ahora.'
-            : '✖ Esta canción fue rechazada por un administrador.'}
+            ? 'Esta canción está pendiente de aprobación. Por ahora solo la ves vos.'
+            : 'Esta canción fue rechazada.'}
         </p>
       )}
 
       <header className="song-header">
-        <div className="song-header-cover">
-          {cover ? <img src={cover} alt={`Portada de ${song.album.title}`} /> : <span aria-hidden="true">🎵</span>}
-        </div>
+        {cover && <img className="song-header-cover" src={cover} alt={`Portada de ${song.album.title}`} />}
         <div className="song-header-info">
           <h1>{song.title}</h1>
-          <p className="song-meta">
+          <p className="song-byline">
             {song.artist && <Link to={`/artists/${song.artist.id}`}>{song.artist.name}</Link>}
-            {song.album && <span> · 📀 {song.album.title}</span>}
-            {song.genre && <span> · <Link to={`/genres/${song.genre.id}`}>{song.genre.name}</Link></span>}
+            {song.album && <>, del disco <em>{song.album.title}</em></>}
           </p>
-          <p className="song-key">
-            Tono: <strong>{currentKey}</strong>
-            {semitones !== 0 && <span className="muted"> (original {song.original_key}, {shift})</span>}
-          </p>
+          {song.genre && (
+            <Link to={`/genres/${song.genre.id}`} className="tag">{song.genre.name}</Link>
+          )}
         </div>
         <FavoriteButton songId={song.id} />
       </header>
 
       <div className="song-tools" role="toolbar" aria-label="Herramientas de la canción">
         <div className="tool-group">
-          <span className="tool-label" id="tono-label">Tono</span>
-          <button type="button" className="btn-secondary btn-small" aria-describedby="tono-label"
-            onClick={() => changeTone(Math.max(semitones - 1, -11))} disabled={transposing || semitones <= -11}
-            aria-label="Bajar medio tono">−½</button>
-          <button type="button" className="btn-secondary btn-small" aria-describedby="tono-label"
-            onClick={() => changeTone(Math.min(semitones + 1, 11))} disabled={transposing || semitones >= 11}
-            aria-label="Subir medio tono">+½</button>
+          <span className="tool-label">Tono</span>
+          <div className="stepper">
+            <button type="button" onClick={() => changeTone(Math.max(semitones - 1, -11))}
+              disabled={transposing || semitones <= -11} aria-label="Bajar medio tono">−</button>
+            <output className="stepper-value" aria-live="polite">
+              {currentKey}
+              {semitones !== 0 && <small> {shift}</small>}
+            </output>
+            <button type="button" onClick={() => changeTone(Math.min(semitones + 1, 11))}
+              disabled={transposing || semitones >= 11} aria-label="Subir medio tono">+</button>
+          </div>
           {semitones !== 0 && (
-            <button type="button" className="btn-secondary btn-small" onClick={() => changeTone(0)} disabled={transposing}>
-              Original
+            <button type="button" className="btn-link" onClick={() => changeTone(0)} disabled={transposing}>
+              Volver a {song.original_key}
             </button>
           )}
         </div>
 
         <div className="tool-group">
           <span className="tool-label">Letra</span>
-          <button type="button" className="btn-secondary btn-small" onClick={() => setFontSize((f) => Math.max(f - 2, MIN_FONT))}
-            disabled={fontSize <= MIN_FONT} aria-label="Achicar letra">A−</button>
-          <button type="button" className="btn-secondary btn-small" onClick={() => setFontSize((f) => Math.min(f + 2, MAX_FONT))}
-            disabled={fontSize >= MAX_FONT} aria-label="Agrandar letra">A+</button>
+          <div className="stepper">
+            <button type="button" onClick={() => setFontSize((f) => Math.max(f - 2, MIN_FONT))}
+              disabled={fontSize <= MIN_FONT} aria-label="Achicar letra">−</button>
+            <output className="stepper-value">{fontSize}</output>
+            <button type="button" onClick={() => setFontSize((f) => Math.min(f + 2, MAX_FONT))}
+              disabled={fontSize >= MAX_FONT} aria-label="Agrandar letra">+</button>
+          </div>
         </div>
 
         <div className="tool-group">
@@ -149,8 +152,8 @@ function SongDetail({ id }) {
         <ErrorMessage message={transposeError} onRetry={() => changeTone(semitones)} />
       )}
 
-      <div className={`sheet-wrapper${transposing ? ' is-updating' : ''}`} aria-busy={transposing}>
-        <ChordSheet content={content} fontSize={fontSize} />
+      <div className={`sheet-page${transposing ? ' is-updating' : ''}`} aria-busy={transposing}>
+        <ChordSheet key={currentKey} content={content} fontSize={fontSize} />
       </div>
     </article>
   )

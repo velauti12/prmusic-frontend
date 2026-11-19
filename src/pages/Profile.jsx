@@ -43,7 +43,7 @@ function MySongs() {
       {loading && <Spinner label="Cargando tus canciones..." />}
       {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
       {!loading && !error && songs.length === 0 && (
-        <EmptyState icon="✍️" title="Todavía no aportaste canciones.">
+        <EmptyState title="Todavía no aportaste canciones.">
           <Link to="/songs/new" className="btn-secondary">Aportar la primera</Link>
         </EmptyState>
       )}
@@ -53,7 +53,7 @@ function MySongs() {
             <li key={song.id}>
               <div>
                 <Link to={`/songs/${song.id}`}>{song.title}</Link>
-                <span className="muted"> · {song.artist?.name}</span>
+                <span className="muted">{song.artist?.name}</span>
               </div>
               <StatusBadge status={song.status} />
             </li>
@@ -88,7 +88,7 @@ function MyFavorites() {
       {loading && <Spinner label="Cargando tus favoritos..." />}
       {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
       {!loading && !error && favorites.length === 0 && (
-        <EmptyState icon="☆" title="No tenés canciones favoritas.">
+        <EmptyState title="No tenés canciones favoritas.">
           <Link to="/" className="btn-secondary">Buscar canciones</Link>
         </EmptyState>
       )}
@@ -98,7 +98,7 @@ function MyFavorites() {
             <li key={fav.id}>
               <div>
                 <Link to={`/songs/${fav.song.id}`}>{fav.song.title}</Link>
-                <span className="muted"> · {fav.song.artist?.name} · Tono {fav.song.original_key}</span>
+                <span className="muted">{fav.song.artist?.name}, en {fav.song.original_key}</span>
               </div>
               <button
                 type="button"

@@ -4,8 +4,8 @@ import Spinner from './Spinner'
 import ErrorMessage from './ErrorMessage'
 import EmptyState from './EmptyState'
 
-// Listado genérico de artistas o géneros (tarjetas con link al detalle).
-export default function CatalogList({ title, subtitle, fetcher, basePath, icon, emptyText, renderExtra }) {
+// Listado de artistas o géneros
+export default function CatalogList({ title, subtitle, fetcher, basePath, emptyText, renderExtra }) {
   const { data, loading, error, reload } = useFetch(fetcher, [])
   const items = data || []
 
@@ -18,13 +18,12 @@ export default function CatalogList({ title, subtitle, fetcher, basePath, icon, 
 
       {loading && <Spinner />}
       {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
-      {!loading && !error && items.length === 0 && <EmptyState icon={icon} title={emptyText} />}
+      {!loading && !error && items.length === 0 && <EmptyState title={emptyText} />}
       {!loading && !error && items.length > 0 && (
-        <ul className="catalog-grid">
+        <ul className="catalog-list">
           {items.map((item) => (
             <li key={item.id}>
-              <Link to={`${basePath}/${item.id}`} className="catalog-card">
-                <span className="catalog-icon" aria-hidden="true">{icon}</span>
+              <Link to={`${basePath}/${item.id}`} className="catalog-item">
                 <span className="catalog-name">{item.name}</span>
                 {renderExtra && <span className="catalog-extra">{renderExtra(item)}</span>}
               </Link>

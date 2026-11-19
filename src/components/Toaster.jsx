@@ -7,7 +7,7 @@ export default function Toaster() {
     <div className="toaster" aria-live="polite" aria-atomic="false">
       {toasts.map((t) => (
         <div key={t.id} className={`toast toast-${t.type}`} role="status">
-          <span>{t.type === 'error' ? '⚠️' : '✅'} {t.message}</span>
+          <span>{t.message}</span>
           <button type="button" className="toast-close" onClick={() => dismiss(t.id)} aria-label="Cerrar notificación">×</button>
         </div>
       ))}

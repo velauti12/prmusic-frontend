@@ -8,7 +8,6 @@ export default function ArtistDetail() {
       backPath="/artists"
       backLabel="Volver a artistas"
       notFoundText="Este artista no existe."
-      icon="🎤"
       renderDescription={(artist) => artist.bio && <p className="page-subtitle">{artist.bio}</p>}
     />
   )

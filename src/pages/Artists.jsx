@@ -8,7 +8,6 @@ export default function Artists() {
       subtitle="Elegí una banda o artista para ver sus canciones."
       fetcher={getArtists}
       basePath="/artists"
-      icon="🎤"
       emptyText="Todavía no hay artistas cargados."
       renderExtra={(artist) => artist.bio}
     />

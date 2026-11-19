@@ -3,7 +3,7 @@ export default function ErrorMessage({ message, onRetry }) {
   if (!message) return null
   return (
     <div className="error-message" role="alert">
-      <span>⚠️ {message}</span>
+      <span>{message}</span>
       {onRetry && (
         <button type="button" className="btn-secondary btn-small" onClick={onRetry}>
           Reintentar

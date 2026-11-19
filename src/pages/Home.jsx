@@ -107,7 +107,6 @@ export default function Home() {
 
       {!songs.loading && !songs.error && list.length === 0 && (
         <EmptyState
-          icon="🔍"
           title={hasFilters ? 'No hay canciones que coincidan con tu búsqueda.' : 'Todavía no hay canciones publicadas.'}
         >
           {hasFilters && (

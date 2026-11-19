@@ -5,8 +5,8 @@ import ErrorMessage from './ErrorMessage'
 import EmptyState from './EmptyState'
 import SongCard from './SongCard'
 
-// Detalle genérico de un artista o género con sus canciones aprobadas.
-export default function CatalogDetail({ fetcher, backPath, backLabel, notFoundText, icon, renderDescription }) {
+// Detalle de un artista o género con sus canciones
+export default function CatalogDetail({ fetcher, backPath, backLabel, notFoundText, renderDescription }) {
   const { id } = useParams()
   const { data, loading, error, reload } = useFetch(() => fetcher(id), [id])
 
@@ -14,7 +14,7 @@ export default function CatalogDetail({ fetcher, backPath, backLabel, notFoundTe
 
   if (error) {
     return error === 'Recurso no encontrado' ? (
-      <EmptyState icon={icon} title={notFoundText}>
+      <EmptyState title={notFoundText}>
         <Link to={backPath} className="btn-secondary">{backLabel}</Link>
       </EmptyState>
     ) : (
@@ -26,19 +26,21 @@ export default function CatalogDetail({ fetcher, backPath, backLabel, notFoundTe
 
   return (
     <section>
-      <Link to={backPath} className="back-link">← {backLabel}</Link>
+      <Link to={backPath} className="back-link">{backLabel}</Link>
 
       <div className="page-header">
-        <h1><span aria-hidden="true">{icon}</span> {data.name}</h1>
+        <h1>{data.name}</h1>
         {renderDescription && renderDescription(data)}
       </div>
 
-      <h2 className="section-title">
-        {songs.length} {songs.length === 1 ? 'canción' : 'canciones'}
-      </h2>
+      {songs.length > 0 && (
+        <h2 className="section-title">
+          {songs.length} {songs.length === 1 ? 'canción' : 'canciones'}
+        </h2>
+      )}
 
       {songs.length === 0 ? (
-        <EmptyState icon="🎵" title="Todavía no hay canciones publicadas acá.">
+        <EmptyState title="Todavía no hay canciones publicadas acá.">
           <Link to="/songs/new" className="btn-secondary">Aportar una</Link>
         </EmptyState>
       ) : (

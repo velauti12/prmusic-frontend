@@ -8,7 +8,6 @@ export default function Genres() {
       subtitle="Explorá las canciones por estilo."
       fetcher={getGenres}
       basePath="/genres"
-      icon="🎸"
       emptyText="Todavía no hay géneros cargados."
     />
   )

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
 import { logout as logoutApi } from '../services/authService'
 
@@ -14,31 +14,29 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/">🎵 PRMUSIC</Link>
-      </div>
+    <header className="navbar">
+      <Link to="/" className="navbar-brand">PRMUSIC</Link>
 
-      <div className="navbar-links">
-        <Link to="/">Canciones</Link>
-        <Link to="/artists">Artistas</Link>
-        <Link to="/genres">Géneros</Link>
+      <nav className="navbar-links" aria-label="Principal">
+        <NavLink to="/" end>Canciones</NavLink>
+        <NavLink to="/artists">Artistas</NavLink>
+        <NavLink to="/genres">Géneros</NavLink>
+      </nav>
 
+      <div className="navbar-user">
         {token ? (
           <>
-            <Link to="/songs/new">+ Nueva canción</Link>
-            <Link to="/profile">👤 {username || 'Mi perfil'}</Link>
-            <button onClick={handleLogout} className="btn-logout">
-              Salir
-            </button>
+            <NavLink to="/songs/new" className="btn-primary btn-small">Subir canción</NavLink>
+            <NavLink to="/profile">{username || 'Mi perfil'}</NavLink>
+            <button type="button" onClick={handleLogout} className="btn-link">Salir</button>
           </>
         ) : (
           <>
-            <Link to="/login">Iniciar sesión</Link>
-            <Link to="/register" className="btn-register">Registrarse</Link>
+            <NavLink to="/login">Iniciar sesión</NavLink>
+            <NavLink to="/register" className="btn-primary btn-small">Crear cuenta</NavLink>
           </>
         )}
       </div>
-    </nav>
+    </header>
   )
 }

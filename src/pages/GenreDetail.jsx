@@ -8,7 +8,6 @@ export default function GenreDetail() {
       backPath="/genres"
       backLabel="Volver a géneros"
       notFoundText="Este género no existe."
-      icon="🎸"
     />
   )
 }
