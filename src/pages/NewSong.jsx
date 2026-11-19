@@ -16,7 +16,8 @@ function validate(form) {
   const errors = {}
   const title = form.title.trim()
   if (title.length < 2 || title.length > 100) errors.title = 'El título debe tener entre 2 y 100 caracteres.'
-  if (!form.artist_id) errors.artist_id = 'Elegí un artista.'
+  const artist = form.artist.trim()
+  if (artist.length < 2 || artist.length > 100) errors.artist = 'Escribí el nombre del artista (o elegilo de la lista).'
   if (!form.genre_id) errors.genre_id = 'Elegí un género.'
   if (!KEY_REGEX.test(form.original_key.trim())) errors.original_key = 'Usá un acorde válido, por ejemplo G, Am, C# o F#m7.'
   if (form.content.trim().length < 10) errors.content = 'La letra con acordes debe tener al menos 10 caracteres.'
@@ -29,7 +30,13 @@ function FieldError({ name, errors }) {
   return <p id={`${name}-error`} className="field-error">{errors[name]}</p>
 }
 
-const EMPTY = { title: '', artist_id: '', genre_id: '', original_key: '', content: '' }
+const EMPTY = { title: '', artist: '', genre_id: '', original_key: '', content: '' }
+
+// Busca el artista por nombre sin importar mayúsculas
+function findArtist(list, name) {
+  const wanted = name.trim().toLowerCase()
+  return list?.find((a) => a.name.toLowerCase() === wanted)
+}
 
 // Formulario para aportar una canción. Queda "pendiente" hasta que un admin la apruebe.
 export default function NewSong() {
@@ -61,11 +68,13 @@ export default function NewSong() {
       return
     }
 
+    // Si el artista no está en la lista se manda el nombre y el back lo carga como pendiente
+    const existing = findArtist(artists.data, form.artist)
     setSaving(true)
     try {
       const { data } = await createSong({
         title: form.title.trim(),
-        artist_id: Number(form.artist_id),
+        ...(existing ? { artist_id: existing.id } : { artist_name: form.artist.trim() }),
         genre_id: Number(form.genre_id),
         original_key: form.original_key.trim(),
         content: form.content,
@@ -77,6 +86,8 @@ export default function NewSong() {
       setSaving(false)
     }
   }
+
+  const isNewArtist = form.artist.trim().length >= 2 && artists.data && !findArtist(artists.data, form.artist)
 
   // Ayuda a describir cada campo con su error para lectores de pantalla
   const errorProps = (name) => (fieldErrors[name]
@@ -106,13 +117,17 @@ export default function NewSong() {
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="artist_id">Artista *</label>
-            <select id="artist_id" name="artist_id" value={form.artist_id} onChange={handleChange}
-              disabled={saving || artists.loading} {...errorProps('artist_id')}>
-              <option value="">{artists.loading ? 'Cargando...' : 'Elegí un artista'}</option>
-              {artists.data?.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-            </select>
-            <FieldError name="artist_id" errors={fieldErrors} />
+            <label htmlFor="artist">Artista *</label>
+            <input id="artist" name="artist" type="text" list="artist-options" autoComplete="off"
+              maxLength={100} placeholder="Escribí o elegí de la lista" value={form.artist}
+              onChange={handleChange} disabled={saving} {...errorProps('artist')} />
+            <datalist id="artist-options">
+              {artists.data?.map((a) => <option key={a.id} value={a.name} />)}
+            </datalist>
+            <FieldError name="artist" errors={fieldErrors} />
+            {isNewArtist && (
+              <p className="field-hint" role="status">No está cargado: se agrega como artista nuevo y lo revisa un admin junto con la canción.</p>
+            )}
           </div>
 
           <div className="form-group">

@@ -33,7 +33,7 @@ describe('NewSong', () => {
     renderForm()
     await userEvent.setup().click(screen.getByRole('button', { name: 'Enviar canción' }))
 
-    expect(screen.getByText('Elegí un artista.')).toBeInTheDocument()
+    expect(screen.getByText('Escribí el nombre del artista (o elegilo de la lista).')).toBeInTheDocument()
     expect(screen.getByLabelText('Tono original *')).toHaveAttribute('aria-invalid', 'true')
     expect(songsService.createSong).not.toHaveBeenCalled()
   })
@@ -43,10 +43,10 @@ describe('NewSong', () => {
     const user = userEvent.setup()
     renderForm()
 
-    await screen.findByRole('option', { name: 'Almendra' })
+    await screen.findByRole('option', { name: 'Rock Nacional' })
     await screen.findByRole('option', { name: 'Rock Nacional' })
     await user.type(screen.getByLabelText('Título *'), 'Muchacha')
-    await user.selectOptions(screen.getByLabelText('Artista *'), '1')
+    await user.type(screen.getByLabelText('Artista *'), 'almendra')
     await user.selectOptions(screen.getByLabelText('Género *'), '2')
     await user.type(screen.getByLabelText('Tono original *'), 'G')
     await user.type(screen.getByLabelText('Letra con acordes *'), 'G  D{enter}Muchacha ojos de papel')
@@ -65,10 +65,10 @@ describe('NewSong', () => {
     const user = userEvent.setup()
     renderForm()
 
-    await screen.findByRole('option', { name: 'Almendra' })
+    await screen.findByRole('option', { name: 'Rock Nacional' })
     await screen.findByRole('option', { name: 'Rock Nacional' })
     await user.type(screen.getByLabelText('Título *'), 'Muchacha')
-    await user.selectOptions(screen.getByLabelText('Artista *'), '1')
+    await user.type(screen.getByLabelText('Artista *'), 'almendra')
     await user.selectOptions(screen.getByLabelText('Género *'), '2')
     await user.type(screen.getByLabelText('Tono original *'), 'G')
     await user.type(screen.getByLabelText('Letra con acordes *'), 'G  D{enter}Muchacha ojos de papel')
@@ -76,5 +76,24 @@ describe('NewSong', () => {
 
     expect(await screen.findByText(/Title ya existe para este artista/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Enviar canción' })).toBeEnabled()
+  })
+
+  it('si el artista no existe manda el nombre para que lo revise un admin', async () => {
+    songsService.createSong.mockResolvedValue({ data: { id: 43 } })
+    const user = userEvent.setup()
+    renderForm()
+
+    await screen.findByRole('option', { name: 'Rock Nacional' })
+    await user.type(screen.getByLabelText('Título *'), 'Ji ji ji')
+    await user.type(screen.getByLabelText('Artista *'), 'Los Redondos')
+    expect(screen.getByText(/se agrega como artista nuevo/)).toBeInTheDocument()
+    await user.selectOptions(screen.getByLabelText('Género *'), '2')
+    await user.type(screen.getByLabelText('Tono original *'), 'A')
+    await user.type(screen.getByLabelText('Letra con acordes *'), 'A  D{enter}Ji ji ji letra')
+    await user.click(screen.getByRole('button', { name: 'Enviar canción' }))
+
+    const sent = songsService.createSong.mock.calls[0][0]
+    expect(sent.artist_name).toBe('Los Redondos')
+    expect(sent.artist_id).toBeUndefined()
   })
 })
