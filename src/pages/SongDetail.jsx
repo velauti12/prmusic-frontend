@@ -8,6 +8,7 @@ import EmptyState from '../components/EmptyState'
 import ChordSheet from '../components/ChordSheet'
 import FavoriteButton from '../components/FavoriteButton'
 import AlbumCover from '../components/AlbumCover'
+import VideoPlayer from '../components/VideoPlayer'
 import { getErrorMessage } from '../utils/apiError'
 
 const MIN_FONT = 12
@@ -103,7 +104,10 @@ function SongDetail({ id }) {
             <Link to={`/genres/${song.genre.id}`} className="tag">{song.genre.name}</Link>
           )}
         </div>
-        <FavoriteButton songId={song.id} />
+        <div className="song-header-side">
+          <VideoPlayer youtubeId={song.youtube_id} title={song.title} artist={song.artist?.name} />
+          <FavoriteButton songId={song.id} />
+        </div>
       </header>
 
       <div className="song-tools" role="toolbar" aria-label="Herramientas de la canción">

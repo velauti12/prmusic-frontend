@@ -10,6 +10,8 @@ import { toast } from '../store/toastStore'
 import { getErrorList } from '../utils/apiError'
 
 // Mismas reglas que el modelo Song del back-end, para avisar antes de enviar
+// Mismo criterio que el back: watch?v=, youtu.be/, shorts/ o embed/
+const YOUTUBE = /(youtube\.com\/(watch\?(.*&)?v=|shorts\/|embed\/)|youtu\.be\/)[\w-]{11}/
 const KEY_REGEX = /^[A-G][b#]?(m|min|maj|dim|aug)?(7|9|11|13)?$/i
 
 function validate(form) {
@@ -21,6 +23,7 @@ function validate(form) {
   if (!form.genre_id) errors.genre_id = 'Elegí un género.'
   if (!KEY_REGEX.test(form.original_key.trim())) errors.original_key = 'Usá un acorde válido, por ejemplo G, Am, C# o F#m7.'
   if (form.content.trim().length < 10) errors.content = 'La letra con acordes debe tener al menos 10 caracteres.'
+  if (form.video_url.trim() && !YOUTUBE.test(form.video_url.trim())) errors.video_url = 'Pegá un link de YouTube (por ej. https://www.youtube.com/watch?v=...).'
   return errors
 }
 
@@ -30,7 +33,7 @@ function FieldError({ name, errors }) {
   return <p id={`${name}-error`} className="field-error">{errors[name]}</p>
 }
 
-const EMPTY = { title: '', artist: '', genre_id: '', original_key: '', content: '' }
+const EMPTY = { title: '', artist: '', genre_id: '', original_key: '', content: '', video_url: '' }
 
 // Busca el artista por nombre sin importar mayúsculas
 function findArtist(list, name) {
@@ -78,6 +81,7 @@ export default function NewSong() {
         genre_id: Number(form.genre_id),
         original_key: form.original_key.trim(),
         content: form.content,
+        video_url: form.video_url.trim(),
       })
       toast('¡Gracias! Tu canción quedó pendiente de aprobación.')
       navigate(`/songs/${data.id}`)
@@ -146,6 +150,13 @@ export default function NewSong() {
               value={form.original_key} onChange={handleChange} disabled={saving} {...errorProps('original_key')} />
             <FieldError name="original_key" errors={fieldErrors} />
           </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="video_url">Video de YouTube (opcional)</label>
+          <input id="video_url" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=..."
+            value={form.video_url} onChange={handleChange} disabled={saving} {...errorProps('video_url')} />
+          <FieldError name="video_url" errors={fieldErrors} />
         </div>
 
         <div className="form-group">
