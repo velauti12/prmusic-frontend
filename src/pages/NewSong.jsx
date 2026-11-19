@@ -17,6 +17,7 @@ function validate(form) {
   const title = form.title.trim()
   if (title.length < 2 || title.length > 100) errors.title = 'El título debe tener entre 2 y 100 caracteres.'
   if (!form.artist_id) errors.artist_id = 'Elegí un artista.'
+  if (!form.genre_id) errors.genre_id = 'Elegí un género.'
   if (!KEY_REGEX.test(form.original_key.trim())) errors.original_key = 'Usá un acorde válido, por ejemplo G, Am, C# o F#m7.'
   if (form.content.trim().length < 10) errors.content = 'La letra con acordes debe tener al menos 10 caracteres.'
   return errors
@@ -65,7 +66,7 @@ export default function NewSong() {
       const { data } = await createSong({
         title: form.title.trim(),
         artist_id: Number(form.artist_id),
-        genre_id: form.genre_id ? Number(form.genre_id) : null,
+        genre_id: Number(form.genre_id),
         original_key: form.original_key.trim(),
         content: form.content,
       })
@@ -115,12 +116,13 @@ export default function NewSong() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="genre_id">Género</label>
+            <label htmlFor="genre_id">Género *</label>
             <select id="genre_id" name="genre_id" value={form.genre_id} onChange={handleChange}
-              disabled={saving || genres.loading}>
-              <option value="">Sin género</option>
+              disabled={saving || genres.loading} {...errorProps('genre_id')}>
+              <option value="">{genres.loading ? 'Cargando...' : 'Elegí un género'}</option>
               {genres.data?.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
             </select>
+            <FieldError name="genre_id" errors={fieldErrors} />
           </div>
 
           <div className="form-group">
@@ -134,7 +136,7 @@ export default function NewSong() {
         <div className="form-group">
           <label htmlFor="content">Letra con acordes *</label>
           <p className="field-hint" id="content-hint">
-            Escribí los acordes en una línea arriba de la letra, alineados con la sílaba donde cambian.
+            Escribí los acordes en una línea arriba de la letra, alineados con la sílaba donde cambian, y con mayúscula (Am, G, F#m7). En la vista previa se ven en rojo los que reconoce.
           </p>
           <textarea id="content" name="content" rows={12} value={form.content} onChange={handleChange}
             disabled={saving} className="mono" aria-describedby="content-hint"
@@ -143,7 +145,7 @@ export default function NewSong() {
         </div>
 
         {form.content.trim() && (
-          <details className="preview">
+          <details className="preview" open>
             <summary>Vista previa</summary>
             <ChordSheet content={form.content} fontSize={14} />
           </details>

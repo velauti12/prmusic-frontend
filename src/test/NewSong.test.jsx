@@ -44,14 +44,16 @@ describe('NewSong', () => {
     renderForm()
 
     await screen.findByRole('option', { name: 'Almendra' })
+    await screen.findByRole('option', { name: 'Rock Nacional' })
     await user.type(screen.getByLabelText('Título *'), 'Muchacha')
     await user.selectOptions(screen.getByLabelText('Artista *'), '1')
+    await user.selectOptions(screen.getByLabelText('Género *'), '2')
     await user.type(screen.getByLabelText('Tono original *'), 'G')
     await user.type(screen.getByLabelText('Letra con acordes *'), 'G  D{enter}Muchacha ojos de papel')
     await user.click(screen.getByRole('button', { name: 'Enviar canción' }))
 
     expect(songsService.createSong).toHaveBeenCalledWith(
-      expect.objectContaining({ title: 'Muchacha', artist_id: 1, original_key: 'G', genre_id: null })
+      expect.objectContaining({ title: 'Muchacha', artist_id: 1, original_key: 'G', genre_id: 2 })
     )
     expect(await screen.findByRole('heading', { name: 'Detalle' })).toBeInTheDocument()
   })
@@ -64,8 +66,10 @@ describe('NewSong', () => {
     renderForm()
 
     await screen.findByRole('option', { name: 'Almendra' })
+    await screen.findByRole('option', { name: 'Rock Nacional' })
     await user.type(screen.getByLabelText('Título *'), 'Muchacha')
     await user.selectOptions(screen.getByLabelText('Artista *'), '1')
+    await user.selectOptions(screen.getByLabelText('Género *'), '2')
     await user.type(screen.getByLabelText('Tono original *'), 'G')
     await user.type(screen.getByLabelText('Letra con acordes *'), 'G  D{enter}Muchacha ojos de papel')
     await user.click(screen.getByRole('button', { name: 'Enviar canción' }))
