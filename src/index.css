@@ -299,6 +299,28 @@ img { display: block; max-width: 100%; }
   text-align: right;
 }
 
+/* ---- Tapa sin imagen: como una tapa de cuaderno con el nombre escrito ---- */
+.album-cover-blank {
+  display: flex;
+  align-items: flex-end;
+  padding: 0.35rem;
+  background:
+    linear-gradient(to right, transparent 18%, var(--margin-red) 18%, var(--margin-red) calc(18% + 1px), transparent calc(18% + 1px)),
+    repeating-linear-gradient(to bottom, var(--sheet) 0, var(--sheet) 7px, var(--rule) 7px, var(--rule) 8px);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+.album-cover-blank span {
+  font-family: var(--font-sheet);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.05;
+  font-size: 0.55rem;
+  padding-left: 20%;
+  word-break: break-word;
+}
+.song-header-cover.album-cover-blank span { font-size: 0.95rem; }
+
 /* ---- Artistas y géneros ---- */
 .catalog-list {
   list-style: none;

@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
+import AlbumCover from './AlbumCover'
 
 // Fila del listado, como el índice de un cuaderno: título, artista y el tono a la derecha
 export default function SongCard({ song }) {
-  const cover = song.album?.cover_url
   return (
     <article className="song-row">
-      {cover && <img className="song-row-cover" src={cover} alt="" loading="lazy" />}
+      <AlbumCover album={song.album} className="song-row-cover" />
       <div className="song-row-text">
         <h3 className="song-row-title">
           <Link to={`/songs/${song.id}`}>{song.title}</Link>

@@ -7,6 +7,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import EmptyState from '../components/EmptyState'
 import ChordSheet from '../components/ChordSheet'
 import FavoriteButton from '../components/FavoriteButton'
+import AlbumCover from '../components/AlbumCover'
 import { getErrorMessage } from '../utils/apiError'
 
 const MIN_FONT = 12
@@ -76,7 +77,6 @@ function SongDetail({ id }) {
   // Mientras llega la respuesta se sigue mostrando la última versión
   const currentKey = (semitones !== 0 && transposed?.key) || song.original_key
   const content = (semitones !== 0 && transposed?.content) || song.content
-  const cover = song.album?.cover_url
   const shift = semitones > 0 ? `+${semitones}` : `${semitones}`
 
   return (
@@ -92,7 +92,7 @@ function SongDetail({ id }) {
       )}
 
       <header className="song-header">
-        {cover && <img className="song-header-cover" src={cover} alt={`Portada de ${song.album.title}`} />}
+        <AlbumCover album={song.album} className="song-header-cover" />
         <div className="song-header-info">
           <h1>{song.title}</h1>
           <p className="song-byline">
